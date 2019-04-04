@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using static System.Console;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,50 +9,98 @@ namespace WarCardGame {
     class Program {
         static void Main(string[] args) {
             int[] deck = new int[52];
+
             FillDeck(deck);
+            int[] player1 = new int[26];
+            int[] player2 = new int[26];
             ShuffleDeck(deck);
+            DealToPlayers(deck, player1, player2);
+            for (int i = 0; i < 26; i++) {
+                string card = IdentifyCard(player1, i);
+            }
+            WriteLine("Shuffled Deck");
+            for (int i = 0; i<deck.Length; i++) {
+                Write(deck[i] + " ");
+                if (i > 0 && i % 4 ==0) {
+                    WriteLine("");
+                }                
+            }
+
+            WriteLine("\nCheck it: ");
+            Array.Sort(deck);
+            //Display sorted deck in 
+            foreach(int i in deck){
+                Write(i + " ");
+                if (i % 13 == 0) {
+                    WriteLine("");
+                }
+                
+            }
+            Read();
         }
+
+        ///////////////////////////////////////////////////////////
+        public static string IdentifyCard(int[] hand, int i) {
+            string card;
+            if (hand[i] == 1 || hand[i] == 13 || hand[i] == 29 || hand[i] == 39) {
+                card = "Ace"; 
+            }
+            return card;
+        }
+
+        /// <FillDeck>///////////////////////////////////////////////////
+        /// This Method fills the deck with sequential numbers
+        /// </FillDeck>
+        /// <param name="deck"></param>
         public static void FillDeck(int[] deck) {
             for (int i = 0; i < deck.Length; ++i) {
                 deck[i] = i + 1;
-                //display original deck
-                WriteLine("Original Deck");
-                Write(deck[i] + " ");
             }
-
         }
-        public static void ShuffleDeck(int[] deck) {
-            var tempArr = new List<int>();
-            int temp;
-            Random ran = new Random();
-
-            for (int i = 0; i < deck.Length; i++) {
-                int ranInt = ran.Next(1, 52);
-                //if the random int is already at the current 
-                //deck index or the tempArr already has the ranInt
-                //value generate another random number
-                while (ranInt == deck[i] || tempArr.Contains(ranInt)) {
-                    ranInt = ran.Next(1, 52);
+/// <DealToPlayers>
+/// //////Deals alternately to player one and two the shuffled deck
+/// </DealToPlayers>
+/// <param name="deck"></param>
+/// <param name="player1"></param>
+/// <param name="player2"></param>
+    public static void DealToPlayers(int[] deck, int[] player1, int[] player2) {
+            int j = 0;
+            int k = 0;
+            for (int i = 0; i < deck.Length; i++) {                
+                if (i % 2 == 0) {
+                    player1[j] = deck[i];
+                    j++;
                 }
-                //copy the random int to the tempArr
-                tempArr.Add(ranInt);
-                //copy the value being swapped to tempArr
-                tempArr.Add(deck[i]);
-                //the subscript of the deck is swapped
-                //with the random int
-                temp = deck[i];
-                deck[i] = ranInt;
-                deck[ranInt-1] = temp;
+                else {
+                    player2[k] = deck[i];
+                    k++;
+                }
             }
-            //display the shuffled deck
-            WriteLine("\nHere is the shuffled deck.");
-            foreach (int count in deck) {
-                WriteLine(count);
-            }
-        }
 
     }
+/// <ShuffleDeck>///////////////////////////////////////////////
+/// This method Shuffles the Numbers
+/// </ShuffleDeck>
+/// <param name="deck"></param>
+        public static void ShuffleDeck(int[] deck) {
+
+            var tempList = new List<int>();            
+            Random ran = new Random();
+           
+            for (int i = deck.Length-1; i > 0; i--) { 
+                int ranInt = ran.Next(0, deck[i]-1);
+                //the value of the current index is swapped
+                //with the random int
+ 
+                int temp = deck[i];
+                deck[i] = deck[ranInt];
+                deck[ranInt] = temp;
+
+            }
+        }           
+    }
 }
+
 
     
 
